@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Detail - Dental System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .patient-detail {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ddd;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Detail - Dental System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<div class="patient-detail">
+    <h2>รายละเอียดผู้ป่วย</h2>
+    <p>ชื่อ: ผู้ป่วย 1</p>
+    <p>ปัญหา: ปวดฟันซี่ที่ 5</p>
+    <img src="{{ url_for('static', filename='img/dental-image.jpg') }}" alt="Dental Image">
+    <p>สถานะ: กำลังรักษา</p>
+    <button>ตอบกลับ</button>
+</div>
+
+<a href="{{ url_for('patient_list') }}">กลับไปยังรายชื่อผู้ป่วย</a>
+
+</body>
+</html>

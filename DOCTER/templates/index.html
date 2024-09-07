@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page - Dental System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #eee;
+            height: 100vh;
+            padding: 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 20px 0;
+        }
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            width: calc(33% - 40px);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            border-radius: 50%;
+            width: 40px;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Dental System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <ul>
+            <li><a href="#">คู่มือ</a></li>
+            <li><a href="#">ปฏิทินทันตยแพทย์</a></li>
+            <li><a href="{{ url_for('patient_list') }}">รายชื่อผู้ป่วย</a></li>
+            <li><a href="#">วินิจฉัยผู้ป่วยเบื้องต้น</a></li>
+            <li><a href="#">คำถามจากผู้ป่วย</a></li>
+            <li><a href="#" class="highlight">รายงาน</a></li>
+        </ul>
+    </div>
+    
+    <div class="main">
+        <h2>นัดหมายจากผู้ป่วย</h2>
+        <div class="appointments">
+            <div class="appointment-card">
+                <p><strong>ชื่อผู้ป่วย:</strong> นายสมชาย สมบูรณ์</p>
+                <p><strong>ปัญหา:</strong> ปวดฟันซี่ที่ 5</p>
+            </div>
+            <div class="appointment-card">
+                <p><strong>ชื่อผู้ป่วย:</strong> นางสาวศรีสุดา ทองดี</p>
+                <p><strong>ปัญหา:</strong> ฟันผุที่ฟันกราม</p>
+            </div>
+            <div class="appointment-card">
+                <p><strong>ชื่อผู้ป่วย:</strong> ด.ช.วิชัย วงศ์เจริญ</p>
+                <p><strong>ปัญหา:</strong> ฟันเกที่ฟันหน้า</p>
+            </div>
+        </div>
+
+        <h2>คำถามจากผู้ป่วย</h2>
+        <div class="patient-questions">
+            <div class="question-card">คำถาม 1</div>
+            <div class="question-card">คำถาม 2</div>
+            <div class="question-card">คำถาม 3</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

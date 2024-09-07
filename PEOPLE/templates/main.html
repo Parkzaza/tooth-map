@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Teeth Map</title>
+    <style>
+        body {
+            background-color: #e0f7fa;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #84d0f3bb;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0.5, 0.5, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .sidebar h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+            margin: 10px 0;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #d0e8f2;
+            color: #007BFF;
+        }
+        .sidebar .highlight {
+            color: red;
+            font-weight: bold;
+        }
+        .sidebar hr {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 18px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            margin-left: 270px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .status-summary {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background-color: #bcdfff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            font-weight: bold;
+            color: #000000;
+        }
+        .teeth-map {
+            position: relative;
+            width: 600px;
+            height: 800px;
+            margin: 0 auto;
+        }
+        .tooth {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .tooth img {
+            width: 100%;
+            height: auto;
+        }
+        .tooth:hover img {
+            transform: scale(1.1);
+            box-shadow: none;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 5px;
+            padding: 8px 12px;
+            white-space: nowrap;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .tooltip.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tooltip-animate {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+         /* Upper teeth positions */
+        .tooth-11 { top: 20px; left: 245px; }
+        .tooth-12 { top: 40px; left: 200px; }
+        .tooth-13 { top: 70px; left: 170px; }
+        .tooth-14 { top: 110px; left: 140px; }
+        .tooth-15 { top: 155px; left: 120px; }
+        .tooth-16 { top: 200px; left: 110px; }
+        .tooth-17 { top: 245px; left: 100px; }
+        .tooth-18 { top: 295px; left: 100px; }
+
+        .tooth-21 { top: 20px; left: 300px; }
+        .tooth-22 { top: 40px; left: 350px; }
+        .tooth-23 { top: 80px; left: 380px; }
+        .tooth-24 { top: 120px; left: 410px; }
+        .tooth-25 { top: 165px; left: 430px; }
+        .tooth-26 { top: 205px; left: 445px; }
+        .tooth-27 { top: 255px; left: 460px; }
+        .tooth-28 { top: 305px; left: 460px; }
+
+        /* Lower teeth positions */
+        .tooth-31 { top: 670px; left: 298px; }
+        .tooth-32 { top: 655px; left: 345px; }
+        .tooth-33 { top: 625px; left: 375px; }
+        .tooth-34 { top: 585px; left: 410px; }
+        .tooth-35 { top: 540px; left: 430px; }
+        .tooth-36 { top: 495px; left: 445px; }
+        .tooth-37 { top: 450px; left: 460px; }
+        .tooth-38 { top: 400px; left: 460px; }
+
+        .tooth-41 { top: 670px; left: 245px; }
+        .tooth-42 { top: 655px; left: 200px; }
+        .tooth-43 { top: 625px; left: 170px; }
+        .tooth-44 { top: 585px; left: 140px; }
+        .tooth-45 { top: 540px; left: 120px; }
+        .tooth-46 { top: 495px; left: 110px; }
+        .tooth-47 { top: 450px; left: 100px; }
+        .tooth-48 { top: 400px; left: 100px; }
+
+        .points-box {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .rewards-section {
+            margin-top: 30px;
+        }
+        .reward {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .redeem-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .redeem-button:hover {
+            background-color: #0056b3;
+        }
+        .logout-button {
+            background-color: #FF4136;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .logout-button:hover {
+            background-color: #C0392B;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <a href="#" >คู่มือ</a>
+    <a href="#" >คลังความรู้</a>
+    <a href="/calendar">ปฏิทินนัดหมาย</a>
+    <a href="/patient_report">รายงานปัญหาทางทันตกรรม</a>
+    <hr>
+    <a href="/dental_record">บันทึกทันตกรรม</a>
+    <a href="#" class="highlight">รายงาน</a>
+</div>
+
+<div class="container">
+    <h2 style="color: #007BFF; font-weight: bold;">Interactive Teeth Map</h2>
+    <div class="teeth-map">
+        <!-- Upper teeth -->
+        <div class="tooth tooth-11" onclick="showStatus('Tooth 11', event)" data-status="{{ teeth_data.get('11', 'ปกติ') }}"><img src="static/Pics/tooth11.png" alt="Tooth 11"></div>
+        <div class="tooth tooth-12" onclick="showStatus('Tooth 12', event)" data-status="{{ teeth_data.get('12', 'ปกติ') }}"><img src="static/Pics/tooth12.png" alt="Tooth 12"></div>
+        <div class="tooth tooth-13" onclick="showStatus('Tooth 13', event)" data-status="{{ teeth_data.get('13', 'ปกติ') }}"><img src="static/Pics/tooth13.png" alt="Tooth 13"></div>
+        <div class="tooth tooth-14" onclick="showStatus('Tooth 14', event)" data-status="{{ teeth_data.get('14', 'ปกติ') }}"><img src="static/Pics/tooth14.png" alt="Tooth 14"></div>
+        <div class="tooth tooth-15" onclick="showStatus('Tooth 15', event)" data-status="{{ teeth_data.get('15', 'ปกติ') }}"><img src="static/Pics/tooth15.png" alt="Tooth 15"></div>
+        <div class="tooth tooth-16" onclick="showStatus('Tooth 16', event)" data-status="{{ teeth_data.get('16', 'ปกติ') }}"><img src="static/Pics/tooth16.png" alt="Tooth 16"></div>
+        <div class="tooth tooth-17" onclick="showStatus('Tooth 17', event)" data-status="{{ teeth_data.get('17', 'ปกติ') }}"><img src="static/Pics/tooth17.png" alt="Tooth 17"></div>
+        <div class="tooth tooth-18" onclick="showStatus('Tooth 18', event)" data-status="{{ teeth_data.get('18', 'ปกติ') }}"><img src="static/Pics/tooth18.png" alt="Tooth 18"></div>
+
+        <div class="tooth tooth-21" onclick="showStatus('Tooth 21', event)" data-status="{{ teeth_data.get('21', 'ปกติ') }}"><img src="static/Pics/tooth21.png" alt="Tooth 21"></div>
+        <div class="tooth tooth-22" onclick="showStatus('Tooth 22', event)" data-status="{{ teeth_data.get('22', 'ปกติ') }}"><img src="static/Pics/tooth22.png" alt="Tooth 22"></div>
+        <div class="tooth tooth-23" onclick="showStatus('Tooth 23', event)" data-status="{{ teeth_data.get('23', 'ปกติ') }}"><img src="static/Pics/tooth23.png" alt="Tooth 23"></div>
+        <div class="tooth tooth-24" onclick="showStatus('Tooth 24', event)" data-status="{{ teeth_data.get('24', 'ปกติ') }}"><img src="static/Pics/tooth24.png" alt="Tooth 24"></div>
+        <div class="tooth tooth-25" onclick="showStatus('Tooth 25', event)" data-status="{{ teeth_data.get('25', 'ปกติ') }}"><img src="static/Pics/tooth25.png" alt="Tooth 25"></div>
+        <div class="tooth tooth-26" onclick="showStatus('Tooth 26', event)" data-status="{{ teeth_data.get('26', 'ปกติ') }}"><img src="static/Pics/tooth26.png" alt="Tooth 26"></div>
+        <div class="tooth tooth-27" onclick="showStatus('Tooth 27', event)" data-status="{{ teeth_data.get('27', 'ปกติ') }}"><img src="static/Pics/tooth27.png" alt="Tooth 27"></div>
+        <div class="tooth tooth-28" onclick="showStatus('Tooth 28', event)" data-status="{{ teeth_data.get('28', 'ปกติ') }}"><img src="static/Pics/tooth28.png" alt="Tooth 28"></div>
+
+        <!-- Lower teeth -->
+        <div class="tooth tooth-31" onclick="showStatus('Tooth 31', event)" data-status="{{ teeth_data.get('31', 'ปกติ') }}"><img src="static/Pics/tooth31.png" alt="Tooth 31"></div>
+        <div class="tooth tooth-32" onclick="showStatus('Tooth 32', event)" data-status="{{ teeth_data.get('32', 'ปกติ') }}"><img src="static/Pics/tooth32.png" alt="Tooth 32"></div>
+        <div class="tooth tooth-33" onclick="showStatus('Tooth 33', event)" data-status="{{ teeth_data.get('33', 'ปกติ') }}"><img src="static/Pics/tooth33.png" alt="Tooth 33"></div>
+        <div class="tooth tooth-34" onclick="showStatus('Tooth 34', event)" data-status="{{ teeth_data.get('34', 'ปกติ') }}"><img src="static/Pics/tooth34.png" alt="Tooth 34"></div>
+        <div class="tooth tooth-35" onclick="showStatus('Tooth 35', event)" data-status="{{ teeth_data.get('35', 'ปกติ') }}"><img src="static/Pics/tooth35.png" alt="Tooth 35"></div>
+        <div class="tooth tooth-36" onclick="showStatus('Tooth 36', event)" data-status="{{ teeth_data.get('36', 'ปกติ') }}"><img src="static/Pics/tooth36.png" alt="Tooth 36"></div>
+        <div class="tooth tooth-37" onclick="showStatus('Tooth 37', event)" data-status="{{ teeth_data.get('37', 'ปกติ') }}"><img src="static/Pics/tooth37.png" alt="Tooth 37"></div>
+        <div class="tooth tooth-38" onclick="showStatus('Tooth 38', event)" data-status="{{ teeth_data.get('38', 'ปกติ') }}"><img src="static/Pics/tooth38.png" alt="Tooth 38"></div>
+
+        <div class="tooth tooth-41" onclick="showStatus('Tooth 41', event)" data-status="{{ teeth_data.get('41', 'ปกติ') }}"><img src="static/Pics/tooth41.png" alt="Tooth 41"></div>
+        <div class="tooth tooth-42" onclick="showStatus('Tooth 42', event)" data-status="{{ teeth_data.get('42', 'ปกติ') }}"><img src="static/Pics/tooth42.png" alt="Tooth 42"></div>
+        <div class="tooth tooth-43" onclick="showStatus('Tooth 43', event)" data-status="{{ teeth_data.get('43', 'ปกติ') }}"><img src="static/Pics/tooth43.png" alt="Tooth 43"></div>
+        <div class="tooth tooth-44" onclick="showStatus('Tooth 44', event)" data-status="{{ teeth_data.get('44', 'ปกติ') }}"><img src="static/Pics/tooth44.png" alt="Tooth 44"></div>
+        <div class="tooth tooth-45" onclick="showStatus('Tooth 45', event)" data-status="{{ teeth_data.get('45', 'ปกติ') }}"><img src="static/Pics/tooth45.png" alt="Tooth 45"></div>
+        <div class="tooth tooth-46" onclick="showStatus('Tooth 46', event)" data-status="{{ teeth_data.get('46', 'ปกติ') }}"><img src="static/Pics/tooth46.png" alt="Tooth 46"></div>
+        <div class="tooth tooth-47" onclick="showStatus('Tooth 47', event)" data-status="{{ teeth_data.get('47', 'ปกติ') }}"><img src="static/Pics/tooth47.png" alt="Tooth 47"></div>
+        <div class="tooth tooth-48" onclick="showStatus('Tooth 48', event)" data-status="{{ teeth_data.get('48', 'ปกติ') }}"><img src="static/Pics/tooth48.png" alt="Tooth 48"></div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+    <div id="status-summary" class="status-summary">
+        <h3 style="margin: 0; text-decoration: underline;">สถานะ</h3>
+        {% if status_count.get('ปกติ', 0) > 0 %}
+        <p id="normal-count">ฟันปกติ: {{ status_count.get('ปกติ', 0) }}</p>
+        {% endif %}
+        {% if status_count.get('ฟันผุ', 0) > 0 %}
+        <p id="decayed-count">ฟันผุ: {{ status_count.get('ฟันผุ', 0) }}</p>
+        {% endif %}
+        {% if status_count.get('ฟันคุด', 0) > 0 %}
+        <p id="impacted-count">ฟันคุด: {{ status_count.get('ฟันคุด', 0) }}</p>
+        {% endif %}
+        {% if status_count.get('ฟันถูกถอน', 0) > 0 %}
+        <p id="extracted-count">ฟันถูกถอน: {{ status_count.get('ฟันถูกถอน', 0) }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Profile Section -->
+    <div class="points-box" style="position: fixed; bottom: 100px; right: 20px; background-color: #28a745;">
+        คุณมี {{ patient.points }} แต้มสะสม
+    </div>
+
+    <div class="rewards-section" style="position: absolute; bottom: 20px; left: 20px; width: 230px; background-color: #e0f7fa; padding: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-size: 80px;">
+        <h2 style="text-align: center; margin-bottom: 10px; font-size: 20px;">สิทธิ์การรักษาที่คุณสามารถแลกได้</h2>
+        {% for reward in rewards %}
+        <div class="reward" style="background-color: #ffffff; padding: 6px; margin-bottom: 6px; border-radius: 5px; text-align: left; font-size: 12px;">
+            <p><strong>{{ reward.description }}</strong></p>
+            <p>แต้มที่ต้องการ: {{ reward.points_required }}</p>
+            <p>รายละเอียด: สามารถใช้สิทธิ์เพื่อ {{ reward.description }}</p>
+            {% if patient.points >= reward.points_required %}
+            <form action="/redeem_reward" method="POST">
+                <input type="hidden" name="reward_id" value="{{ reward.id }}">
+                <button class="redeem-button" type="submit" style="width: 100%; padding: 6px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 11px;">แลก</button>
+            </form>
+            {% else %}
+            <p style="color: red;">แต้มของคุณไม่เพียงพอ</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>        
+    
+    <a class="logout-button" href="/logout" style="position: fixed; bottom: 70px; right: 20px;">
+        ออกจากระบบ
+    </a>
+</div>
+
+<script>
+    function updateStatusSummary() {
+    const teeth = document.querySelectorAll('.tooth');
+    let normalCount = 0;
+    let decayedCount = 0;
+
+    teeth.forEach(tooth => {
+        const status = tooth.getAttribute('data-status');
+        if (status === 'ปกติ') {
+            normalCount++;
+        } else if (status === 'ฟันผุ') {
+            decayedCount++;
+        }
+    });
+
+    document.getElementById('normal-count').textContent = `ฟันปกติ: ${normalCount}`;
+    document.getElementById('decayed-count').textContent = `ฟันผุ: ${decayedCount}`;
+}
+    
+    function showStatus(tooth, event) {
+        var tooltip = document.getElementById('tooltip');
+        tooltip.classList.remove('tooltip-animate');
+        void tooltip.offsetWidth;
+        tooltip.classList.add('tooltip-animate');
+        tooltip.style.left = (event.pageX + 10) + 'px';
+        tooltip.style.top = (event.pageY + 10) + 'px';
+        const status = event.currentTarget.getAttribute('data-status');
+        tooltip.innerHTML = `สถานะของ ${tooth}: ${status}`;
+        tooltip.classList.add('show', 'tooltip-animate');
+    }
+
+    document.onclick = function(event) {
+        var tooltip = document.getElementById('tooltip');
+        if (event.target.tagName !== 'IMG') {
+            tooltip.classList.remove('show', 'tooltip-animate');
+        }
+    };
+
+    updateStatusSummary();
+</script>
+</body>
+</html>

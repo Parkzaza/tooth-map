@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Form - Dental System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 500px;
+            margin: auto;
+            border: 1px solid #ddd;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Form - Dental System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<form>
+    <h2>บันทึกรายละเอียดผู้ป่วย</h2>
+    <label for="name">ชื่อ:</label>
+    <input type="text" id="name" name="name" required>
+    
+    <label for="problem">ปัญหา:</label>
+    <textarea id="problem" name="problem" required></textarea>
+
+    <label for="date">วันนัด:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="status">สถานะ:</label>
+    <select id="status" name="status" required>
+        <option value="ยัง">ยัง</option>
+        <option value="ไม่ใช่">ไม่ใช่</option>
+    </select>
+
+    <label for="image">อัพโหลดรูป:</label>
+    <input type="file" id="image" name="image">
+
+    <button type="submit">บันทึก</button>
+</form>
+
+<a href="{{ url_for('home') }}">กลับหน้าแรก</a>
+
+</body>
+</html>

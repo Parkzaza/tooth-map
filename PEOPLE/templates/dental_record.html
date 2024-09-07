@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกทันตกรรม</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 20px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .problem-options {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .problem-options label {
+            font-weight: normal;
+        }
+        .other-problem {
+            display: none;
+            margin-top: 10px;
+        }
+        .tooth-entry {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            position: relative;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .add-tooth-button {
+            background-color: #28a745; /* สีเขียวที่ต้องการ */
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        .add-tooth-button:hover {
+            background-color: #218838; /* สีเขียวเข้มเมื่อ hover */
+        }
+        .remove-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #FF4136;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: auto;
+        }
+        .remove-button:hover {
+            background-color: #C0392B;
+        }
+        .image-preview {
+            display: none;
+            margin-bottom: 20px;
+        }
+        .image-preview img {
+            max-width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .home-button {
+            background-color: #007BFF; /* สีพื้นหลังสีน้ำเงิน */
+            color: white; /* สีตัวหนังสือสีขาว */
+            padding: 10px 20px; /* ระยะห่างภายในปุ่ม */
+            text-decoration: none; /* เอาเส้นใต้ของลิงก์ออก */
+            border-radius: 5px; /* มุมของปุ่มมน */
+            display: inline-block; /* จัดให้ปุ่มอยู่ในบรรทัดเดียวกับองค์ประกอบอื่น */
+            font-size: 16px; /* ขนาดตัวอักษร */
+            font-weight: bold; /* น้ำหนักตัวอักษร */
+            position: absolute; /* เพิ่มการตั้งค่าตำแหน่ง */
+            top: 10px; /* ปรับตำแหน่งให้ห่างจากขอบบน */
+            left: 10px; /* ปรับตำแหน่งให้ห่างจากขอบซ้าย */
+        }
+
+        .home-button:hover {
+            background-color: #0056b3; /* สีพื้นหลังเมื่อเอาเมาส์ชี้ */
+        }
+
+    </style>
+    <script>
+        function toggleOtherProblemInput(toothIndex) {
+            var otherProblemInput = document.getElementById('other_problem_input_' + toothIndex);
+            var otherProblemRadio = document.getElementById('problem_other_' + toothIndex);
+            
+            if (otherProblemRadio.checked) {
+                otherProblemInput.style.display = 'block';
+            } else {
+                otherProblemInput.style.display = 'none';
+            }
+        }
+
+        function addToothEntry(multiple = false) {
+            var toothEntriesContainer = document.getElementById('tooth-entries-container');
+            var toothIndex = toothEntriesContainer.children.length + 1;
+
+            var toothEntryHtml = `
+            <div class="tooth-entry" id="tooth_entry_${toothIndex}">
+                <label for="tooth_number_${toothIndex}">ฟัน:</label>
+                <select id="tooth_number_${toothIndex}" name="tooth_number_${toothIndex}" required>
+                    <option value="" disabled selected>เลือกฟัน</option>
+                    <option value="ฟันบน">ฟันบน</option>
+                    <option value="ฟันล่าง">ฟันล่าง</option>
+                </select>
+
+                <label for="tooth_side_${toothIndex}">ซี่${multiple ? ' (หลายซี่โดยใช้เครื่องหมายจุลภาค , คั่น)' : ''}:</label>
+                <input type="text" id="tooth_side_${toothIndex}" name="tooth_side_${toothIndex}" ${multiple ? 'placeholder="เช่น 1, 2, 3, 4"' : 'type="number" min="1" max="32"'} required>
+
+                <label>มีปัญหา:</label>
+                <div class="problem-options">
+                    <label><input type="radio" name="problem_type_${toothIndex}" value="ฟันผุ" onclick="toggleOtherProblemInput(${toothIndex})" required> ฟันผุ</label>
+                    <label><input type="radio" name="problem_type_${toothIndex}" value="ฟันคุด" onclick="toggleOtherProblemInput(${toothIndex})" required> ฟันคุด</label>
+                    <label><input type="radio" name="problem_type_${toothIndex}" value="ฟันถูกถอน" onclick="toggleOtherProblemInput(${toothIndex})" required> ฟันถูกถอน</label>
+                    <label><input type="radio" name="problem_type_${toothIndex}" id="problem_other_${toothIndex}" value="อื่น ๆ" onclick="toggleOtherProblemInput(${toothIndex})" required> อื่น ๆ</label>
+                </div>
+
+                <div id="other_problem_input_${toothIndex}" class="other-problem">
+                    <label for="other_problem_${toothIndex}">ระบุปัญหา:</label>
+                    <input type="text" id="other_problem_${toothIndex}" name="other_problem_${toothIndex}">
+                </div>
+                
+                <button type="button" class="remove-button" onclick="removeToothEntry(${toothIndex})">ลบ</button>
+            </div>`;
+
+            toothEntriesContainer.insertAdjacentHTML('beforeend', toothEntryHtml);
+        }
+
+        function removeToothEntry(toothIndex) {
+            var toothEntry = document.getElementById('tooth_entry_' + toothIndex);
+            toothEntry.remove();
+        }
+
+        function previewImage() {
+            var fileInput = document.getElementById('image_upload');
+            var previewContainer = document.getElementById('image_preview');
+            var previewImage = document.getElementById('preview_image');
+
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                previewImage.src = reader.result;
+                previewContainer.style.display = 'block';
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.src = "";
+                previewContainer.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <a href="{{ url_for('index') }}" class="home-button">Home</a>
+    <h1>บันทึกทันตกรรม</h1>
+
+    <form action="/submit_dental_record" method="POST" enctype="multipart/form-data">
+        <label for="patient_name">ชื่อ:</label>
+        <input type="text" id="doctor_name" name="doctor_name" required>
+
+        <div id="tooth-entries-container"></div>
+
+        <button type="button" class="add-tooth-button" onclick="addToothEntry(true)">เพิ่มซี่ฟัน (หลายซี่ในรายการเดียว)</button>
+
+        <label for="image_upload">อัพโหลดรูป (ถ้ามี):</label>
+        <input type="file" id="image_upload" name="image_upload" accept="image/*" onchange="previewImage()">
+        
+        <div id="image_preview" class="image-preview">
+            <label>ตัวอย่างภาพ:</label>
+            <img id="preview_image" src="" alt="Image Preview">
+        </div>
+
+        <label for="appointment_date">นัดวันที่ทำ (ถ้ามี):</label>
+        <input type="date" id="appointment_date" name="appointment_date">
+
+        <label for="notes">คำเเนะนำ (ถ้ามี):</label>
+        <textarea id="notes" name="notes" rows="4"></textarea>
+
+        <button type="submit">ส่ง</button>
+    </form>
+
+    <script>
+        // เพิ่มรายการฟันรายการแรกโดยอัตโนมัติเมื่อโหลดหน้า
+        addToothEntry(true);
+    </script>
+</body>
+</html>

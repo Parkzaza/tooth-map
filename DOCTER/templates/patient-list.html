@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient List - Dental System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .patient-list {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 800px;
+            margin: auto;
+            border: 1px solid #ddd;
+        }
+        .patient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .patient-item:last-child {
+            border-bottom: none;
+        }
+        .view-button {
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient List - Dental System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<div class="patient-list">
+    <div class="patient-item">
+        <span>ผู้ป่วย 1</span>
+        <a href="{{ url_for('patient_detail') }}" class="view-button">ดูอาการ</a>
+    </div>
+    <div class="patient-item">
+        <span>ผู้ป่วย 2</span>
+        <a href="{{ url_for('patient_detail') }}" class="view-button">ดูอาการ</a>
+    </div>
+    <div class="patient-item">
+        <span>ผู้ป่วย 3</span>
+        <a href="{{ url_for('patient_detail') }}" class="view-button">ดูอาการ</a>
+    </div>
+</div>
+
+<a href="{{ url_for('home') }}">กลับหน้าแรก</a>
+
+</body>
+</html>

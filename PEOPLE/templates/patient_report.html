@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานปัญหาทางทันตกรรม</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 20px;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .home-button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+        .tooth-list {
+            margin-bottom: 20px;
+        }
+        .tooth-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .tooth-item select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .tooth-item input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .remove-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #FF4136;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: auto;
+        }
+        .remove-button:hover {
+            background-color: #C0392B;
+        }
+        .add-tooth {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .add-tooth:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        function addTooth() {
+            var toothList = document.getElementById('tooth_list');
+            var newTooth = document.createElement('div');
+            newTooth.className = 'tooth-item';
+            newTooth.innerHTML = `
+                <label>ฟัน:</label>
+                <select name="tooth_number[]" required>
+                    <option value="" disabled selected>เลือกฟัน</option>
+                    <option value="ฟันบน">ฟันบน</option>
+                    <option value="ฟันล่าง">ฟันล่าง</option>
+                </select>
+                <label>ซี่ (หลายซี่โดยใช้เครื่องหมายจุลภาค , คั่น):</label>
+                <input type="text" name="tooth_side[]" placeholder="เช่น 1, 2, 3, 4" required>
+                <button type="button" class="remove-button" onclick="removeTooth(this)">ลบ</button>
+            `;
+            toothList.appendChild(newTooth);
+        }
+
+        function removeTooth(button) {
+            var toothItem = button.parentElement;
+            toothItem.remove();
+        }
+    </script>
+</head>
+<body>
+    <a href="{{ url_for('index') }}" class="home-button">Home</a>
+    <h1>รายงานปัญหาทางทันตกรรม</h1>
+
+    <form action="/patient_report" method="POST" enctype="multipart/form-data">
+        <label for="patient_name">ชื่อผู้ป่วย:</label>
+        <input type="text" id="patient_name" name="patient_name" required>
+
+        <label>ฟันและซี่:</label>
+        <div id="tooth_list" class="tooth-list">
+            <div class="tooth-item">
+                <label>ฟัน:</label>
+                <select name="tooth_number[]" required>
+                    <option value="" disabled selected>เลือกฟัน</option>
+                    <option value="ฟันบน">ฟันบน</option>
+                    <option value="ฟันล่าง">ฟันล่าง</option>
+                </select>
+                <label>ซี่ (หลายซี่โดยใช้เครื่องหมายจุลภาค , คั่น):</label>
+                <input type="text" name="tooth_side[]" placeholder="เช่น 1, 2, 3, 4" required>
+                <button type="button" class="remove-button" onclick="removeTooth(this)">ลบ</button>
+            </div>
+        </div>
+        <button type="button" class="add-tooth" onclick="addTooth()">เพิ่มซี่ฟัน (หลายซี่ในรายการเดียว)</button>
+
+        <label for="problem_description">รายละเอียดปัญหา:</label>
+        <textarea id="problem_description" name="problem_description" rows="4" required></textarea>
+
+        <label for="image_upload">อัปโหลดภาพ (ถ้ามี):</label>
+        <input type="file" id="image_upload" name="image_upload">
+
+        <label>สะดวกนัดหมายไหม:</label>
+        <input type="radio" id="appointment_yes" name="appointment_needed" value="yes"> ใช่
+        <input type="radio" id="appointment_no" name="appointment_needed" value="no"> ไม่
+
+        <div style="margin-top: 20px;">
+            <button type="submit">ส่งรายงาน</button>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #E0F7FA;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background-color: #B3E5FC;
+    padding: 20px;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #01579B;
+    padding: 10px;
+    display: block;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+.sidebar ul li a.highlight {
+    background-color: #FFCDD2;
+    color: #B71C1C;
+}
+
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+/* จัดกรอบของ "นัดหมายจากผู้ป่วย" */
+.appointments {
+    display: flex;
+    gap: 20px;
+}
+
+.appointment-card {
+    background-color: #FFF8E1; /* สีเหลืองอ่อน */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+    transition: background-color 0.3s ease; /* เพิ่มการเปลี่ยนแปลงสี */
+}
+
+.appointment-card:hover {
+    background-color: #FFECB3; /* สีเหลืองเข้มขึ้นเมื่อ hover */
+}
+
+/* จัดกรอบของ "คำถามจากผู้ป่วย" */
+.patient-questions {
+    display: flex;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.question-card {
+    background-color: rgb(212, 253, 193); /* สีขาวพื้นฐาน */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    text-align: center;
+    transition: background-color 0.3s ease; /* เพิ่มการเปลี่ยนแปลงสี */
+}
+
+.question-card:hover {
+    background-color: #8eff8e; /* เปลี่ยนเป็นสีฟ้าอ่อนเมื่อ hover */
+}
